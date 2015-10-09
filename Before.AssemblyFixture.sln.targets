@@ -2,9 +2,9 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
   <PropertyGroup>
-    <RestoreDir>.</RestoreDir>
+    <RestoreDir>.\</RestoreDir>
   </PropertyGroup>
 
-  <Import Project="$(RestoreDir)\NuGet.Restore.targets" />
+  <Import Project="$(RestoreDir)NuGet.Restore.targets" />
 
 </Project>

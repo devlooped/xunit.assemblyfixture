@@ -9,7 +9,7 @@ using Xunit.Sdk;
 
 namespace Xunit
 {
-	public class TestCollectionRunner : XunitTestCollectionRunner
+	class TestCollectionRunner : XunitTestCollectionRunner
 	{
 		readonly Dictionary<Type, object> assemblyFixtureMappings;
 		readonly IMessageSink diagnosticMessageSink;

@@ -11,6 +11,8 @@ namespace Xunit
 		{ }
 
 		protected override ITestFrameworkExecutor CreateExecutor(AssemblyName assemblyName)
-			=> new TestFrameworkExecutor(assemblyName, SourceInformationProvider, DiagnosticMessageSink);
+		{
+			return new TestFrameworkExecutor(assemblyName, SourceInformationProvider, DiagnosticMessageSink);
+		}
 	}
 }

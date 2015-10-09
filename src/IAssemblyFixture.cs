@@ -9,9 +9,5 @@
 	/// exactly matches the <typeparamref name="TFixture"/>.
 	/// </summary>
 	/// <typeparam name="TFixture">The type of the fixture.</typeparam>
-	/// <remarks>
-	/// If asynchronous setup of <typeparamref name="TFixture"/> is required
-	/// it should implement the <see cref="IAsyncLifetime"/> interface.
-	/// </remarks>
 	public interface IAssemblyFixture<TFixture> where TFixture : class, new() { }
 }

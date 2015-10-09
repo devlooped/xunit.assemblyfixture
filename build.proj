@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-		<NuGetPath Condition=" '$(NuGetPath)' == '' ">build\.nuget</NuGetPath>
+		<NuGetPath Condition=" '$(NuGetPath)' == '' ">.nuget</NuGetPath>
 		<NuGetExe Condition=" '$(NuGetExe)' == '' ">$(NuGetPath)\NuGet.exe</NuGetExe>
 	</PropertyGroup>
 
