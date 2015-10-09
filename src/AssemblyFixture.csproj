@@ -26,6 +26,12 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>xunit.assemblyfixture.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="IAssemblyFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -56,6 +62,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="xunit.assemblyfixture.nuspec" />
+    <None Include="xunit.assemblyfixture.snk" />
     <None Include="xunit.assemblyfixture.targets" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
