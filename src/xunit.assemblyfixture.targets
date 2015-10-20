@@ -6,7 +6,7 @@
 			GenerateAssemblyFixtureFrameworkInfo;
 			$(CompileDependsOn);
 		</CompileDependsOn>
-    <AssemblyFixtureFrameworkInfoFile Condition="'$(AssemblyFixtureFrameworkInfoFile)' == ''">$(IntermediateOutputPath)AssemblyInfo.VsixFramework.g$(DefaultLanguageSourceExtension)</AssemblyFixtureFrameworkInfoFile>
+		<AssemblyFixtureFrameworkInfoFile Condition="'$(AssemblyFixtureFrameworkInfoFile)' == ''">$(IntermediateOutputPath)AssemblyInfo.AssemblyFixtureFramework.g$(DefaultLanguageSourceExtension)</AssemblyFixtureFrameworkInfoFile>
 	</PropertyGroup>
 
   <ItemGroup>
@@ -15,9 +15,8 @@
 
   <Target Name="GenerateAssemblyFixtureFrameworkInfo" Inputs="$(MSBuildProjectFullPath)" Outputs="$(AssemblyFixtureFrameworkInfoFile)">
 		<WriteLinesToFile File="$(AssemblyFixtureFrameworkInfoFile)" Lines="[assembly: Xunit.TestFrameworkAttribute (&quot;Xunit.TestFramework&quot;, &quot;xunit.assemblyfixture&quot;)]" Overwrite="true" />
-    <ItemGroup>
-			<FileWrites Include="$(AssemblyFixtureFrameworkInfoFile)" />
-		</ItemGroup>
+	<ItemGroup>
+		<FileWrites Include="$(AssemblyFixtureFrameworkInfoFile)" />
+	</ItemGroup>
 	</Target>
-
 </Project>
