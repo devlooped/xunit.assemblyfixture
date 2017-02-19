@@ -31,13 +31,13 @@ To which this project adds:
   will be created before any of the tests using it have run, and once all the tests 
   have finished, it will clean up the fixture object by calling `Dispose`, if present.
 
-To use class fixtures, you need to take the following steps:
+To use assembly fixtures, you need to take the following steps:
 
 - Create the fixture class, and put the the startup code in the fixture
   class constructor.
 - If the fixture class needs to perform cleanup, implement `IDisposable`
   on the fixture class, and put the cleanup code in the `Dispose()` method.
-- Add `IClassFixture<TFixture>` to the test class.
+- Add `IAssemblyFixture<TFixture>` to the test class.
 - If the test class needs access to the fixture instance, add it as a
   constructor argument, and it will be provided automatically.
 
