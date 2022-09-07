@@ -1,8 +1,8 @@
 # Changelog
 
-## [2.1.0-beta](https://github.com/devlooped/xunit.assemblyfixture/tree/2.1.0-beta) (2022-09-07)
+## [v2.1.0-beta](https://github.com/devlooped/xunit.assemblyfixture/tree/v2.1.0-beta) (2022-09-07)
 
-[Full Changelog](https://github.com/devlooped/xunit.assemblyfixture/compare/cadb4b304851eaedaab39ad882bd56f211789edc...2.1.0-beta)
+[Full Changelog](https://github.com/devlooped/xunit.assemblyfixture/compare/cadb4b304851eaedaab39ad882bd56f211789edc...v2.1.0-beta)
 
 :twisted_rightwards_arrows: Merged:
 
