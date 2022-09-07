@@ -6,37 +6,34 @@ using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Xunit
+namespace Xunit;
+
+class TestAssemblyRunner : XunitTestAssemblyRunner
 {
-	class TestAssemblyRunner : XunitTestAssemblyRunner
-	{
-		readonly Dictionary<Type, object> assemblyFixtureMappings = new Dictionary<Type, object>();
+    readonly Dictionary<Type, object> assemblyFixtureMappings = new();
 
-		public TestAssemblyRunner(ITestAssembly testAssembly,
-			IEnumerable<IXunitTestCase> testCases,
-			IMessageSink diagnosticMessageSink,
-			IMessageSink executionMessageSink,
-			ITestFrameworkExecutionOptions executionOptions)
-			: base(testAssembly, testCases, diagnosticMessageSink, executionMessageSink, executionOptions)
-		{
-		}
+    public TestAssemblyRunner(ITestAssembly testAssembly,
+        IEnumerable<IXunitTestCase> testCases,
+        IMessageSink diagnosticMessageSink,
+        IMessageSink executionMessageSink,
+        ITestFrameworkExecutionOptions executionOptions)
+        : base(testAssembly, testCases, diagnosticMessageSink, executionMessageSink, executionOptions)
+    {
+    }
 
-		protected override Task BeforeTestAssemblyFinishedAsync()
-		{
-			// Make sure we clean up everybody who is disposable, and use Aggregator.Run to isolate Dispose failures
-			foreach (var disposable in assemblyFixtureMappings.Values.OfType<IDisposable>())
-				Aggregator.Run(disposable.Dispose);
+    protected override Task BeforeTestAssemblyFinishedAsync()
+    {
+        // Make sure we clean up everybody who is disposable, and use Aggregator.Run to isolate Dispose failures
+        foreach (var disposable in assemblyFixtureMappings.Values.OfType<IDisposable>())
+            Aggregator.Run(disposable.Dispose);
 
-			return base.BeforeTestAssemblyFinishedAsync();
-		}
+        return base.BeforeTestAssemblyFinishedAsync();
+    }
 
 
-		protected override Task<RunSummary> RunTestCollectionAsync(IMessageBus messageBus,
-																   ITestCollection testCollection,
-																   IEnumerable<IXunitTestCase> testCases,
-																   CancellationTokenSource cancellationTokenSource)
-		{
-			return new TestCollectionRunner(assemblyFixtureMappings, testCollection, testCases, DiagnosticMessageSink, messageBus, TestCaseOrderer, new ExceptionAggregator(Aggregator), cancellationTokenSource).RunAsync();
-		}
-	}
+    protected override Task<RunSummary> RunTestCollectionAsync(IMessageBus messageBus,
+                                                               ITestCollection testCollection,
+                                                               IEnumerable<IXunitTestCase> testCases,
+                                                               CancellationTokenSource cancellationTokenSource)
+        => new TestCollectionRunner(assemblyFixtureMappings, testCollection, testCases, DiagnosticMessageSink, messageBus, TestCaseOrderer, new ExceptionAggregator(Aggregator), cancellationTokenSource).RunAsync();
 }
