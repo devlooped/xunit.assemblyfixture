@@ -6,6 +6,7 @@
     <AssemblyName>xunit.assemblyfixture</AssemblyName>
     <AssemblyOriginatorKeyFile>..\xunit.assemblyfixture.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageIconUrl>https://github.com/devlooped/xunit.assemblyfixture/raw/main/assets/img/xunit-purple.png</PackageIconUrl>
     <Description>
       Assembly-level shared state via IAssemblyFixture, just like built-in collection and class fixture state.
     </Description>
