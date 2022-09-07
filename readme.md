@@ -1,6 +1,12 @@
 # xunit.assemblyfixture
 
-Provides shared state/fixture data across tests in the same assembly, following the design of [class fixtures](https://xunit.github.io/docs/shared-context.html#class-fixture) (rather than the more convoluted [collection fixtures](https://xunit.github.io/docs/shared-context.html#collection-fixture)). To complement [xUnit documentation style](https://xunit.github.io/docs/shared-context.html), I shamelessly copy its layout here.
+Provides shared state/fixture data across tests in the same assembly, following the design of 
+[class fixtures](https://xunit.github.io/docs/shared-context.html#class-fixture) (rather than the more 
+convoluted [collection fixtures](https://xunit.github.io/docs/shared-context.html#collection-fixture)). 
+
+To complement [xUnit documentation style](https://xunit.github.io/docs/shared-context.html), I shamelessly copy its layout here.
+
+> NOTE: applies to xunit 2.4 only. 3.0+ will have its own way of doing this.
 
 ## Shared Context between Tests
 
