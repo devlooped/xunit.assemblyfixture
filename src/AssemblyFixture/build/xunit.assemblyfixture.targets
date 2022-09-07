@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <ItemGroup>
+    <AssemblyAttribute Include="Xunit.TestFrameworkAttribute">
+        <_Parameter1>Xunit.TestFramework</_Parameter1>
+        <_Parameter2>xunit.assemblyfixture</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
+</Project>
