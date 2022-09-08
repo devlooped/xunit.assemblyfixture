@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.1.0](https://github.com/devlooped/xunit.assemblyfixture/tree/v2.1.0) (2022-09-08)
+
+[Full Changelog](https://github.com/devlooped/xunit.assemblyfixture/compare/v2.1.0-beta...v2.1.0)
+
+:hammer: Other:
+
+- Real time discovery [\#6](https://github.com/devlooped/xunit.assemblyfixture/issues/6)
+
 ## [v2.1.0-beta](https://github.com/devlooped/xunit.assemblyfixture/tree/v2.1.0-beta) (2022-09-07)
 
 [Full Changelog](https://github.com/devlooped/xunit.assemblyfixture/compare/cadb4b304851eaedaab39ad882bd56f211789edc...v2.1.0-beta)
