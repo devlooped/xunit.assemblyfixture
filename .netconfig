@@ -53,8 +53,8 @@
 	weak
 [file ".github/workflows/build.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/build.yml
-	sha = 7db501b3b7d28af9928d315019257f3e8741db60
-	etag = 8eeebfe2b6b2786e9df8276e87b03435be8e6a2cce027ac892e8232c41f9fe61
+	sha = 391da5ef9fd53167f053600239ab79f5f5030d51
+	etag = 118c1f063f38a157a458337f61dee7a74cb58a3d7960df5566af7d8a24f64206
 	weak
 [file ".github/workflows/changelog.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/changelog.yml
@@ -63,8 +63,8 @@
 	weak
 [file ".github/workflows/dotnet-file.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/dotnet-file.yml
-	sha = aed791a3a35919e3088cd2bde604cbae6f47b393
-	etag = 0f7649805f5e84fba5104339bfd0c21ac4747b65186b16eab39f863e2db7a3e1
+	sha = b97b8f19569fa1b93cece4b22afab0e838693c5a
+	etag = a9d246d40ee9cf9796fe694835b787cba415f4f23e919c6a763dd3ebfa607681
 	weak
 [file ".github/workflows/includes.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/includes.yml
