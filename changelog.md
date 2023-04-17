@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.2.0](https://github.com/devlooped/xunit.assemblyfixture/tree/v2.2.0) (2023-04-17)
+
+[Full Changelog](https://github.com/devlooped/xunit.assemblyfixture/compare/v2.1.1...v2.2.0)
+
+:hammer: Other:
+
+- Support for .net core  2+ [\#2](https://github.com/devlooped/xunit.assemblyfixture/issues/2)
+
 ## [v2.1.1](https://github.com/devlooped/xunit.assemblyfixture/tree/v2.1.1) (2022-09-09)
 
 [Full Changelog](https://github.com/devlooped/xunit.assemblyfixture/compare/v2.1.0...v2.1.1)
