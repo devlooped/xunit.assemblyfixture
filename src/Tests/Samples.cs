@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Xunit
 {
@@ -34,6 +35,15 @@ namespace Xunit
             Assert.Equal(1, MyAssemblyFixture.InstantiationCount);
         }
     }
+    
+    public class Sample3
+    {
+        [Fact]
+        public void EnsureSingleton()
+        {
+            Assert.Equal(1, MyAssemblyAsyncLifetime.InitializationCount);
+        }
+    }
 
     public class MyAssemblyFixture : IDisposable
     {
@@ -49,6 +59,22 @@ namespace Xunit
             // Uncomment this and it will surface as an assembly cleanup failure
             //throw new DivideByZeroException();
             //InstantiationCount = 0;
+        }
+    }
+
+    public class MyAssemblyAsyncLifetime : IAssemblyAsyncLifetime
+    {
+        public static int InitializationCount;
+
+        public Task InitializeAsync()
+        {
+            InitializationCount++;
+            return Task.CompletedTask;
+        }
+
+        public Task DisposeAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }
