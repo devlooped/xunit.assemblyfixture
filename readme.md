@@ -103,3 +103,39 @@ public class MyDatabaseTests : IAssemblyFixture<DatabaseFixture>
   control creation order and/or have dependencies between fixtures, you should
   create a class which encapsulates the other two fixtures, so that it can
   do the object creation itself.
+
+### IAssemblyAsyncLifetime
+
+  ***When to use***: when you want to do some async actions on the test assembly 
+  load and after the test assembly finished but no need to share anything to tests.
+  For example, you could create and remove some docker containers with databases 
+  and so on. 
+
+To use IAssemblyAsyncLifetime, you need to take the following steps:
+
+- Implement IAssemblyAsyncLifetime somewhere in the assembly.
+
+Here is a simple example:
+
+```csharp
+public class MyAssemblyAsyncLifetime : IAssemblyAsyncLifetime
+{
+    public async Task InitializeAsync()
+    {
+        // ... do some async actions here ...
+    }
+
+    public async Task DisposeAsync()
+    {
+        // ... do some async actions here ...
+    }
+}
+
+```
+
+  If you need multiple IAssemblyAsyncLifetime objects, you can implement the 
+  interface as many times as you want.
+
+  Note that you cannot control the order that IAssemblyAsyncLifetime objects 
+  are created, and IAssemblyAsyncLifetime cannot take dependencies on other
+  IAssemblyAsyncLifetime. 
