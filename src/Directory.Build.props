@@ -1,4 +1,4 @@
-<Project>
+<Project TreatAsLocalProperty="VersionPrefix">
   <!-- To extend/change the defaults, create a Directory.props alongside this file -->
 
   <PropertyGroup Label="CI" Condition="'$(CI)' == ''">
@@ -20,16 +20,17 @@
 
   <PropertyGroup Label="NuGet">
     <Authors>Daniel Cazzulino</Authors>
+    <Company>Devlooped</Company>
     <Copyright>Copyright (C) Daniel Cazzulino and Contributors. All rights reserved.</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
     <!-- Pick src-level readme+icon automatically -->
     <PackageIcon Condition="Exists('$(MSBuildThisFileDirectory)icon.png')">icon.png</PackageIcon>
-    <PackageReadmeFile Condition="Exists('$(MSBuildThisFileDirectory)readme.md')">readme.md</PackageReadmeFile>
+    <PackageReadmeFile Condition="'$(PackReadme)' != 'false' and Exists('$(MSBuildThisFileDirectory)readme.md')">readme.md</PackageReadmeFile>
     <!-- Pick project-level readme+icon overrides automatically -->
     <PackageIcon Condition="Exists('$(MSBuildProjectDirectory)\icon.png')">icon.png</PackageIcon>
-    <PackageReadmeFile Condition="Exists('$(MSBuildProjectDirectory)\readme.md')">readme.md</PackageReadmeFile>
+    <PackageReadmeFile Condition="'$(PackReadme)' != 'false' and Exists('$(MSBuildProjectDirectory)\readme.md')">readme.md</PackageReadmeFile>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <GenerateRepositoryUrlAttribute>true</GenerateRepositoryUrlAttribute>
@@ -37,16 +38,19 @@
     <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\bin'))</PackageOutputPath>
 
     <!-- Use Directory.Packages.props if possible. NOTE: other MSBuild SDKs (i.e. NoTargets/Traversal) do not support central packages -->
-    <ManagePackageVersionsCentrally Condition="Exists('$(MSBuildThisFileDirectory)Directory.Packages.props') AND ('$(MSBuildProjectExtension)' == '.csproj' OR '$(MSBuildProjectExtension)' == '.vbproj')">true</ManagePackageVersionsCentrally>
+    <ManagePackageVersionsCentrally Condition="Exists('$(MSBuildThisFileDirectory)Directory.Packages.props')">true</ManagePackageVersionsCentrally>
+    <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
 
     <!-- Ensure MSBuild tooling can access package artifacts always via PKG_[PackageId] -->
     <GeneratePathProperty>true</GeneratePathProperty>
+    <!-- Avoid warnings for test projects when we run dotnet pack on the whole solution. -->
+    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
+    <!-- See https://learn.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#prunepackagereference-specification -->
+    <RestoreEnablePackagePruning>true</RestoreEnablePackagePruning>
   </PropertyGroup>
 
   <PropertyGroup Label="Build">
     <Configuration Condition="'$(Configuration)' == '' and $(CI)">Release</Configuration>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GenerateDocumentationFile Condition="$(MSBuildProjectName.Contains('Tests'))">false</GenerateDocumentationFile>
     <LangVersion>Latest</LangVersion>
 
     <!-- See https://docs.microsoft.com/en-us/dotnet/standard/assembly/reference-assemblies -->
@@ -117,6 +121,8 @@
 
   <PropertyGroup Label="Version" Condition="$(VersionLabel) != ''">
     <_VersionLabel>$(VersionLabel.Replace('refs/heads/', ''))</_VersionLabel>
+    <_VersionLabel>$(_VersionLabel.Replace('refs/tags/v', ''))</_VersionLabel>
+
     <!-- For PRs, we just need a fixed package version numbered after the PR # itself, so remove the commits # at the end -->
     <_VersionLabel Condition="$(_VersionLabel.Contains('refs/pull/'))">$(VersionLabel.TrimEnd('.0123456789'))</_VersionLabel>
     <!-- Next replace the prefix for simply 'pr', so we end up with 'pr99/merge' by default -->
@@ -125,9 +131,22 @@
     <_VersionLabel>$(_VersionLabel.Replace('/merge', ''))</_VersionLabel>
     <!-- Finally sanitize the branch with dashes, so we can build path-separated branches, like rel/v1.0.0 or feature/foo -->
     <_VersionLabel>$(_VersionLabel.Replace('/', '-'))</_VersionLabel>
+    <!-- And underscores which are also invalid labels, so we can use branches like dev/feature_foo -->
+    <_VersionLabel>$(_VersionLabel.Replace('_', '-'))</_VersionLabel>
 
     <!-- Set sanitized version to the actual version suffix used in build/pack -->
-    <VersionSuffix>$(_VersionLabel)</VersionSuffix>
+    <VersionSuffix Condition="!$(VersionLabel.Contains('refs/tags/'))">$(_VersionLabel)</VersionSuffix>
+    <!-- Special case for tags, the label is actually the version. Backs compat since passed-in value overrides MSBuild-set one -->
+    <Version Condition="$(VersionLabel.Contains('refs/tags/'))">$(_VersionLabel)</Version>
+
+    <!-- In order for latest from main/master to always be greatest when using -prerelease switch on install/run, 
+         we change the scheme as follows:
+         - main/master remain as today: VersionPrefix: 42.42.${{ github.run_number }}  (from yaml)
+         - others: VersionPrefix: 42.42.0-[label].${{ github.run_number }}
+    -->
+    <IsMaster Condition="$(VersionLabel.Contains('refs/heads/main')) or $(VersionLabel.Contains('refs/heads/master'))">true</IsMaster>
+    <VersionPrefix Condition="'$(IsMaster)' != 'true'">42.42.0</VersionPrefix>
+    <VersionSuffix Condition="'$(IsMaster)' != 'true'">$(VersionSuffix).$(GITHUB_RUN_NUMBER)</VersionSuffix>
   </PropertyGroup>
 
   <ItemGroup Label="ThisAssembly.Project">
@@ -141,6 +160,28 @@
     <ProjectProperty Include="PublicKeyToken" />
   </ItemGroup>
 
+  <ItemGroup Label="Throw">
+    <Using Include="System.ArgumentException" Static="true" />
+    <Using Include="System.ArgumentOutOfRangeException" Static="true" />
+    <Using Include="System.ArgumentNullException" Static="true" />
+  </ItemGroup>
+
   <Import Project="Directory.props" Condition="Exists('Directory.props')"/>
   <Import Project="Directory.props.user" Condition="Exists('Directory.props.user')" />
+
+  <!-- If the imported props changed ManagePackageVersionsCentrally, we need to replicate 
+       the Version defaults from Microsoft.NET.DefaultAssemblyInfo.targets since it's too 
+       early here and Directory.Packages.props will be imported right after this time, 
+       meaning dependencies that expect to use the currently building Version would not 
+       get the expected value.
+   -->
+  <PropertyGroup Condition="'$(ManagePackageVersionsCentrally)' == 'true' and '$(Version)' == ''">
+    <VersionPrefix Condition=" '$(VersionPrefix)' == '' ">1.0.0</VersionPrefix>
+    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
+    <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
+  </PropertyGroup>
+
+  <!-- Implemented by SDK in .targets, guaranteeing it's overwritten. Added here since we add a DependsOnTargets to it. 
+       Covers backwards compatiblity with non-SDK projects. -->
+  <Target Name="InitializeSourceControlInformation" />
 </Project>
