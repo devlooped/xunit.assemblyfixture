@@ -47,13 +47,19 @@ jobs:
           # if we don't have at least 100 requests left, wait until reset
           if ($rate.remaining -lt 10) {
               $wait = ($rate.reset - (Get-Date (Get-Date).ToUniversalTime() -UFormat %s))
-              echo "Rate limit remaining is $($rate.remaining), waiting for $($wait / 1000) seconds to reset"
+              if ($wait -gt 300) {
+                  echo "Rate limit remaining is $($rate.remaining), reset in $wait seconds (more than 5'). Aborting."
+                  exit 1
+              }
+              echo "Rate limit remaining is $($rate.remaining), waiting $wait seconds to reset"
               sleep $wait
               $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
               echo "Rate limit has reset to $($rate.remaining) requests"
           }
 
       - name: 🔄 sync
+        env:
+          GCM_CREDENTIAL_STORE: cache
         run: |
           dotnet tool update -g dotnet-gcm
           # store credentials in plaintext for linux compat
@@ -63,7 +69,7 @@ jobs:
 
           dotnet tool update -g dotnet-file
           $changelog = "$([System.IO.Path]::GetTempPath())dotnet-file.md"
-          dotnet file sync -c:$changelog
+          dotnet file sync -c:$changelog --init https://github.com/devlooped/oss/blob/main/.netconfig
           if (test-path $changelog) {
             echo 'CHANGES<<EOF' >> $env:GITHUB_ENV
             cat $changelog >> $env:GITHUB_ENV
