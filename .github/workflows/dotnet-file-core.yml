@@ -80,7 +80,7 @@ jobs:
           }
 
       - name: +Mᐁ includes
-        uses: devlooped/actions-includes@v1
+        uses: devlooped/actions-includes@v2
         with:
           validate: false
 
